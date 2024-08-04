@@ -1,10 +1,23 @@
 use actix_web::{web, App, HttpServer, HttpResponse, Responder};
-use serde::{Deserialize, Serialize};
+use serde::{Deserialize, Deserializer, Serialize};
 use uuid::Uuid;
 use std::sync::Mutex;
 
+fn deserialize_uuid<'de, D>(deserializer: D) -> Result<Uuid, D::Error>
+where
+    D: Deserializer<'de>,
+{
+    let s: String = Deserialize::deserialize(deserializer)?;
+    if s.is_empty() {
+        Ok(Uuid::new_v4())
+    } else {
+        Uuid::parse_str(&s).map_err(serde::de::Error::custom)
+    }
+}
+
 #[derive(Serialize, Deserialize, Clone)]
 struct Account {
+    #[serde(deserialize_with = "deserialize_uuid")]
     id: Uuid,
     name: String,
     transactions: Vec<Transaction>,
