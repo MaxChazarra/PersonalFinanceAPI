@@ -19,7 +19,6 @@ async fn create_transaction(data: web::Data<AppState>, account_id: web::Path<Uui
         account.transactions.push(new_transaction.clone());
         HttpResponse::Ok().json(new_transaction)
     } else {
-        println!("Account with ID {} not found", account_id);
         HttpResponse::NotFound().finish()
     }
 }
@@ -29,7 +28,6 @@ async fn get_transactions(data: web::Data<AppState>, account_id: web::Path<Uuid>
     if let Some(account) = accounts.iter().find(|a| a.id == *account_id) {
         HttpResponse::Ok().json(account.transactions.clone())
     } else {
-        println!("Account with ID {} not found", account_id);
         HttpResponse::NotFound().finish()
     }
 }

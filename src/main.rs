@@ -17,8 +17,8 @@ async fn main() -> std::io::Result<()> {
     HttpServer::new(move || {
         App::new()
             .app_data(app_state.clone())
-            .configure(account_config)
             .configure(transaction_config)
+            .configure(account_config)
     })
     .bind("127.0.0.1:8080")?
     .run()
